@@ -1,0 +1,17 @@
+ .wrapper {
+  padding: 1rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.header {
+  text-transform: capitalize;
+}
+
+.serviceError {
+  color: red;
+}
+
+.cityNotFound {
+  color: orange;
+}
