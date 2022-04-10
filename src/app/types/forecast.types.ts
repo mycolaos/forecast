@@ -32,6 +32,6 @@ export interface ISavedForecast {
 }
 
 export interface SearchParams {
-  city: string;
+  cities: string[];
   dt?: number;
 }

@@ -50,6 +50,15 @@ export class ForecastChartComponent implements OnInit {
           color: '#606060',
         },
       },
+      tooltip: {
+        shared: true,
+        style: { textTransform: 'capitalize' },
+      },
+      legend: {
+        enabled: true,
+      },
+
+      series: this.series,
       xAxis: [
         {
           // Bottom X hours axis.
@@ -83,16 +92,9 @@ export class ForecastChartComponent implements OnInit {
           gridLineWidth: 1,
         },
       ],
-
       yAxis: {
         title: { text: null },
       },
-
-      legend: {
-        enabled: false,
-      },
-
-      series: this.series,
     };
   }
 }

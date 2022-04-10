@@ -1,4 +1,5 @@
 import { MatButtonModule } from '@angular/material/button';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -14,6 +15,7 @@ import { NgModule } from '@angular/core';
     MatInputModule,
     MatFormFieldModule,
     MatListModule,
+    MatChipsModule,
   ],
 })
 export class MaterialModule {}

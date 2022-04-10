@@ -2,11 +2,11 @@
   <app-search-form (onSubmit)="handleSearch($event)"></app-search-form>
   <span *ngIf="serviceError" ngClass="serviceError">An error occured, please contact the administration.</span>
   <span *ngIf="cityNotFound" ngClass="cityNotFound">City not found "{{ cityNotFound }}"</span>
-  <h2 ngClass="header">{{city}}</h2>
+  <h2 ngClass="header">{{cities.join(' VS ')}}</h2>
   <div ngClass="chartsWrapper">
-    <app-forecast-chart [series]='[temperature]' chartTitle="Temperature"></app-forecast-chart>
-    <app-forecast-chart [series]='[humidity]' chartTitle="Humidity"></app-forecast-chart>
-    <app-forecast-chart [series]='[rain]' chartTitle="Rain"></app-forecast-chart>
-    <app-forecast-chart [series]='[snow]' chartTitle="Snow"></app-forecast-chart>
+    <app-forecast-chart [series]='temperature' chartTitle="Temperature"></app-forecast-chart>
+    <app-forecast-chart [series]='humidity' chartTitle="Humidity"></app-forecast-chart>
+    <app-forecast-chart [series]='rain' chartTitle="Rain"></app-forecast-chart>
+    <app-forecast-chart [series]='snow' chartTitle="Snow"></app-forecast-chart>
   </div>
 </div>

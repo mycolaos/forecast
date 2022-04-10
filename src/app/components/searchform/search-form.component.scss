@@ -1,8 +1,13 @@
 .form {
-  display: flex; 
+  display: flex;
   align-items: baseline;
 }
 
 .searchInput {
   text-transform: capitalize;
+}
+
+.searchField {
+  width: 100%;
+  max-width: 500px;
 }

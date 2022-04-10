@@ -5,9 +5,42 @@ import {
   SearchParams,
 } from 'src/app/types/forecast.types';
 import { SeriesColumnOptions, SeriesLineOptions } from 'highcharts';
+import { map, tap } from 'rxjs';
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { WeatherService } from 'src/app/services/weather.service';
+
+const seriesConfig = {
+  temperature: {
+    name: 'Temperature',
+    type: 'line',
+    tooltip: {
+      valueSuffix: ' °C',
+      valueDecimals: 1,
+    },
+  },
+  humidity: {
+    name: 'Humidity',
+    type: 'line',
+    tooltip: {
+      valueSuffix: '%',
+    },
+  },
+  rain: {
+    name: 'Rain',
+    type: 'column',
+    tooltip: {
+      valueDecimals: 2,
+    },
+  },
+  snow: {
+    name: 'Snow',
+    type: 'column',
+    tooltip: {
+      valueDecimals: 2,
+    },
+  },
+};
 
 @Component({
   selector: 'app-forecast',
@@ -15,45 +48,20 @@ import { WeatherService } from 'src/app/services/weather.service';
   styleUrls: ['./forecast.component.scss'],
 })
 export class ForecastComponent implements OnInit {
-  city: string = '';
+  cities: string[] = [];
   serviceError?: boolean;
   cityNotFound?: string;
 
-  temperature: SeriesLineOptions = {
-    name: 'Temperature',
-    type: 'line',
-    tooltip: {
-      valueSuffix: ' °C',
-      valueDecimals: 1,
-    },
-  };
-  humidity: SeriesLineOptions = {
-    name: 'Humidity',
-    type: 'line',
-    tooltip: {
-      valueSuffix: '%',
-    },
-  };
-  rain: SeriesColumnOptions = {
-    name: 'Rain',
-    type: 'column',
-    tooltip: {
-      valueDecimals: 2,
-    },
-  };
-  snow: SeriesColumnOptions = {
-    name: 'Snow',
-    type: 'column',
-    tooltip: {
-      valueDecimals: 2,
-    },
-  };
+  temperature: SeriesLineOptions[] = [];
+  humidity: SeriesLineOptions[] = [];
+  rain: SeriesColumnOptions[] = [];
+  snow: SeriesColumnOptions[] = [];
 
   constructor(private weatherService: WeatherService) {}
 
   ngOnInit(): void {}
 
-  private createSeries = (data: IForecastResponseData): void => {
+  private createSeries = (data: IForecastResponseData, city: string): any => {
     const tempTemperature: SeriesLineOptions['data'] = [];
     const tempHumidity: SeriesLineOptions['data'] = [];
     const tempRain: SeriesLineOptions['data'] = [];
@@ -73,39 +81,63 @@ export class ForecastComponent implements OnInit {
       if (snow) tempSnow.push({ x: dt * 1000, y: snow['3h'] });
     });
 
-    this.temperature = { ...this.temperature, data: tempTemperature };
-    this.humidity = { ...this.humidity, data: tempHumidity };
-    this.rain = { ...this.rain, data: tempRain };
-    this.snow = { ...this.snow, data: tempSnow };
+    return {
+      temperature: {
+        ...seriesConfig.temperature,
+        data: tempTemperature,
+        name: city,
+      },
+      humidity: { ...seriesConfig.humidity, data: tempHumidity, name: city },
+      rain: { ...seriesConfig.rain, data: tempRain, name: city },
+      snow: { ...seriesConfig.snow, data: tempSnow, name: city },
+    };
   };
 
-  handleSearch({ city, dt }: SearchParams): void {
-    if (!city) {
+  private addSeries = ({ temperature, humidity, rain, snow }: any) => {
+    this.temperature = [...this.temperature, temperature];
+    this.humidity = [...this.humidity, humidity];
+    this.rain = [...this.rain, rain];
+    this.snow = [...this.snow, snow];
+  };
+
+  handleSearch({ cities, dt }: SearchParams): void {
+    if (!cities?.length) {
       this.reset();
       return;
     }
 
     this.serviceError = false;
     this.cityNotFound = '';
-    this.city = city;
+    this.cities = cities;
+    this.resetSeries();
 
-    this.weatherService.getWeather(city, dt).subscribe({
-      next: (data) => this.createSeries(data),
-      error: (err: HttpErrorResponse) => {
-        if (err.status === 404) {
-          this.cityNotFound = city;
-        } else {
-          this.serviceError = true;
-        }
-      },
-    });
+    cities.forEach((city) =>
+      this.weatherService
+        .getWeather(city, dt)
+        .pipe(map((data) => this.createSeries(data, city)))
+        .subscribe({
+          next: (data) => this.addSeries(data),
+          error: (err: HttpErrorResponse) => {
+            if (err.status === 404) {
+              this.cityNotFound = city;
+            } else {
+              this.serviceError = true;
+            }
+          },
+        })
+    );
   }
 
   reset = () => {
-    this.temperature = { ...this.temperature, data: [] };
-    this.humidity = { ...this.humidity, data: [] };
     this.serviceError = false;
     this.cityNotFound = '';
-    this.city = '';
+    this.cities = [];
+  };
+
+  resetSeries = () => {
+    this.temperature = [];
+    this.humidity = [];
+    this.rain = [];
+    this.snow = [];
   };
 }

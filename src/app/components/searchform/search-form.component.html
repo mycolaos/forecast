@@ -1,10 +1,19 @@
 <form ngClass="form" (ngSubmit)="userSubmit()">
-  <mat-form-field appearance="fill">
-    <mat-label>City</mat-label>
-    <input matInput ngClass="searchInput" type="search" name="search" placeholder="Meteo for city..."
-      [(ngModel)]="value">
-    <button matSuffix mat-icon-button color="primary" type="submit" title="Search" [disabled]="!value">
-      <mat-icon>search</mat-icon>
-    </button>
+  <mat-form-field ngClass="searchField" appearance="fill">
+    <mat-label>Cities</mat-label>
+    <mat-chip-list #chipList aria-label="Cities">
+      <mat-chip *ngFor="let value of values" (removed)="remove(value)">
+        {{value}}
+        <button matChipRemove>
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </mat-chip>
+      <input matInput ngClass="searchInput" [matChipInputFor]="chipList"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
+        (matChipInputTokenEnd)="add($event)" type="search" name="search" placeholder="Meteo for city...">
+      <button matSuffix mat-icon-button color="primary" type="submit" title="Search" [disabled]="values.lenght">
+        <mat-icon title="ctrl+enter">search</mat-icon>
+      </button>
+    </mat-chip-list>
   </mat-form-field>
 </form>

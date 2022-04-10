@@ -4,7 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BehaviorSubject } from 'rxjs';
 import { SearchFormComponent } from './search-form.component';
 
-const INITIAL_QUERY = 'Kyiv';
+const INITIAL_QUERY = ['Kyiv'];
 
 describe('SearchFormComponent', () => {
   let qparams$: BehaviorSubject<{ q: string }>;
@@ -15,7 +15,7 @@ describe('SearchFormComponent', () => {
   let fixture: ComponentFixture<SearchFormComponent>;
 
   beforeEach(async () => {
-    qparams$ = new BehaviorSubject({ q: INITIAL_QUERY });
+    qparams$ = new BehaviorSubject({ q: INITIAL_QUERY.join(',') });
     activatedRouteSpy = jasmine.createSpyObj(
       'ActivatedRoute',
       {},
@@ -50,10 +50,10 @@ describe('SearchFormComponent', () => {
 
   it('should emit when url query changes', () => {
     const newCity = 'London';
-    const subscription = component.onSubmit.subscribe(({ city }) => {
+    const subscription = component.onSubmit.subscribe(({ cities }) => {
       subscription.unsubscribe();
 
-      expect(city).toEqual(newCity);
+      expect(cities).toEqual([newCity]);
     });
     activatedRouteSpy.queryParams.next({ q: newCity, dt: undefined });
   });
@@ -63,12 +63,12 @@ describe('SearchFormComponent', () => {
     spyOn(component.onSubmit, 'emit');
 
     // Simulate value to url sync.
-    component.value = newCity;
+    component.values = [newCity];
     component.userSubmit();
     activatedRouteSpy.queryParams.next({ q: newCity, dt: undefined });
 
     expect(component.onSubmit.emit).toHaveBeenCalledOnceWith({
-      city: newCity,
+      cities: [newCity],
       dt: undefined,
     });
   });
@@ -76,7 +76,7 @@ describe('SearchFormComponent', () => {
   it('should sync url when new value is submitted', () => {
     const newCity = 'Rome';
 
-    component.value = newCity;
+    component.values = [newCity];
     component.userSubmit();
     expect(routerSpy.navigate).toHaveBeenCalledOnceWith([], {
       queryParams: { q: newCity },
