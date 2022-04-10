@@ -48,10 +48,24 @@ describe('SearchFormComponent', () => {
 
   it('should emit when url query changes', () => {
     const newCity = 'London';
-    component.onSubmit.subscribe((city: string) => {
+    const subscription = component.onSubmit.subscribe((city: string) => {
+      subscription.unsubscribe();
+
       expect(city).toEqual(newCity);
     });
     activatedRouteSpy.queryParams.next({ q: newCity });
+  });
+
+  it('should not emit twice when new value is submitted', () => {
+    const newCity = 'London';
+    spyOn(component.onSubmit, 'emit');
+
+    // Simulate value to url sync.
+    component.value = newCity;
+    component.submit();
+    activatedRouteSpy.queryParams.next({ q: newCity });
+
+    expect(component.onSubmit.emit).toHaveBeenCalledOnceWith(newCity);
   });
 
   it('should sync url when new value is submitted', () => {

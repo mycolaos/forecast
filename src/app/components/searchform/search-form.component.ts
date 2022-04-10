@@ -27,19 +27,23 @@ export class SearchFormComponent implements OnInit {
 
   private syncWithUrlParams = (params: Params): void => {
     const q = params['q'];
+    this.queryParam = q;
 
-    if (q !== undefined && q !== this.queryParam) {
+    if (q !== undefined && q !== this.value) {
       this.value = q;
-      this.queryParam = q;
       this.submit();
+    }
+  };
+
+  private syncUrlWithValue = () => {
+    if (this.queryParam !== this.value) {
+      this.router.navigate([], { queryParams: { q: this.value } });
     }
   };
 
   submit(): void {
     this.onSubmit.emit(this.value);
 
-    if (this.queryParam !== this.value) {
-      this.router.navigate([], { queryParams: { q: this.value } });
-    }
+    this.syncUrlWithValue();
   }
 }
