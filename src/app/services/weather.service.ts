@@ -27,7 +27,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class WeatherService {
-  private apiUrlBase = 'http://api.openweathermap.org/data/2.5';
+  private apiUrlBase = 'https://api.openweathermap.org/data/2.5';
   coll: CollectionReference<any>;
 
   constructor(private http: HttpClient, private firestore: Firestore) {
