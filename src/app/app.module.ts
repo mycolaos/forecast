@@ -1,4 +1,6 @@
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { getFirestore, provideFirestore } from '@angular/fire/firestore/lite';
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -12,6 +14,8 @@ import { IndexComponent } from './pages/index/index.component';
 import { MaterialModule } from 'material.module';
 import { NgModule } from '@angular/core';
 import { SearchFormComponent } from './components/searchform/search-form.component';
+import { environment } from 'src/environments/environment';
+import { HistoryComponent } from './pages/history/history.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +34,13 @@ import { SearchFormComponent } from './components/searchform/search-form.compone
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
+    provideFirebaseApp(() =>
+      initializeApp({
+        projectId: 'arbnco-test-24469',
+        apiKey: environment.firebase.apiKey,
+      })
+    ),
+    provideFirestore(() => getFirestore()),
   ],
   providers: [],
   bootstrap: [AppComponent],

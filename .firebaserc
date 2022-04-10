@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "arbnco-test-24469": {
+      "hosting": {
+        "arbnco-test": [
+          "arbnco-test-24469"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "arbnco-test-24469"
+  }
+}

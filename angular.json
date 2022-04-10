@@ -105,6 +105,16 @@
             ],
             "scripts": []
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {
+            "prerender": false,
+            "ssr": false,
+            "browserTarget": "arbnco-test:build:production",
+            "firebaseProject": "arbnco-test-24469",
+            "firebaseHostingSite": "arbnco-test-24469"
+          }
         }
       }
     }

@@ -4,6 +4,7 @@
  * * @see https://example.com/fake-jira-issue-to-add-typings.
  */
 export interface IForecast {
+  // Datetime in seconds.
   dt: number;
   main: {
     temp: number;
@@ -13,4 +14,11 @@ export interface IForecast {
 
 export interface IForecastResponseData {
   list: IForecast[];
+}
+
+export interface ISavedForecast {
+  timestamp: Date;
+  city: string;
+  forecastRaw: IForecastResponseData;
+  forecastStartDt: number;
 }
