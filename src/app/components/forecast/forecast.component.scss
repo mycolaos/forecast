@@ -1,4 +1,6 @@
- .wrapper {
+@import "src/assets/global.scss";
+
+.wrapper {
   padding: 1rem;
 }
 
@@ -12,4 +14,11 @@
 
 .cityNotFound {
   color: orange;
+}
+
+.chartsWrapper {
+  @media #{$desktop-and-up} {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
 }

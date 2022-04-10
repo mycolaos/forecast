@@ -12,6 +12,12 @@ export interface IForecast {
     temp: number;
     humidity: number;
   };
+  rain?: {
+    '3h': number;
+  };
+  snow?: {
+    '3h': number;
+  };
 }
 
 export interface IForecastResponseData {

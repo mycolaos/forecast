@@ -1,4 +1,7 @@
+@import "src/assets/global.scss";
+
 .wrapper {
-  max-width: 600px;
-  margin: 0 auto;
+  @media #{$tablet-and-up} {
+    margin: 0 5rem;
+  }
 }
