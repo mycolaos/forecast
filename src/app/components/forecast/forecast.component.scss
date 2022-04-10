@@ -1,7 +1,7 @@
 @import "src/assets/global.scss";
 
 .wrapper {
-  padding: 1rem;
+  padding: 0.5rem;
 }
 
 .header {
@@ -20,5 +20,7 @@
   @media #{$desktop-and-up} {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    column-gap: 0.5rem;
+    row-gap: 0.5rem;
   }
 }

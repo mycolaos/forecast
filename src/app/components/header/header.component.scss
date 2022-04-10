@@ -1,5 +1,15 @@
+@import "src/assets/global.scss";
+
+.toolbar {
+  @media #{$tablet-and-up} {
+    flex-direction: row;
+  }
+}
+
 .nav {
-  margin-left: auto;
+  @media #{$tablet-and-up} {
+    margin-left: auto;
+  }
 }
 
 .active-link {
