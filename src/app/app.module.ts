@@ -8,14 +8,16 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { ForecastChartComponent } from './components/forecast-chart/forecast-chart.component';
 import { ForecastComponent } from './components/forecast/forecast.component';
+import { ForecastHistoryComponent } from './components/forecast-history/forecast-history.component';
+import { HeaderComponent } from './components/header/header.component';
 import { HighchartsChartModule } from 'highcharts-angular';
+import { HistoryComponent } from './pages/history/history.component';
 import { HttpClientModule } from '@angular/common/http';
 import { IndexComponent } from './pages/index/index.component';
 import { MaterialModule } from 'material.module';
 import { NgModule } from '@angular/core';
 import { SearchFormComponent } from './components/searchform/search-form.component';
 import { environment } from 'src/environments/environment';
-import { HistoryComponent } from './pages/history/history.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +26,9 @@ import { HistoryComponent } from './pages/history/history.component';
     SearchFormComponent,
     ForecastComponent,
     ForecastChartComponent,
+    HistoryComponent,
+    ForecastHistoryComponent,
+    HeaderComponent,
   ],
   imports: [
     BrowserModule,

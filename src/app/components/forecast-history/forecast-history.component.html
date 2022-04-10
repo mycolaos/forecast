@@ -1,0 +1,7 @@
+<h2>Forecasts history</h2>
+<mat-list *ngIf="forecasts">
+  <mat-list-item *ngFor="let forecast of forecasts">
+    <a href='/?q={{forecast.city}}&dt={{forecast.forecastStartDt}}'>
+      {{ forecast.city | titlecase }} {{ forecast.timestamp.toDate()| date:'short' }}</a>
+  </mat-list-item>
+</mat-list>

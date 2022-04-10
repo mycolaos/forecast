@@ -1,7 +1,13 @@
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
+import { SearchParams } from 'src/app/types/forecast.types';
 import { Subscription } from 'rxjs';
+
+type QueryParams = {
+  q?: string;
+  dt?: number;
+};
 
 @Component({
   selector: 'app-search-form',
@@ -11,39 +17,34 @@ import { Subscription } from 'rxjs';
 export class SearchFormComponent implements OnInit {
   routeSub!: Subscription;
   value: string = '';
-  queryParam: string = '';
+  queryParams: QueryParams = {};
 
-  @Output() onSubmit = new EventEmitter<string>();
+  @Output() onSubmit = new EventEmitter<SearchParams>();
 
   constructor(private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
-    this.routeSub = this.route.queryParams.subscribe(this.syncWithUrlParams);
+    this.routeSub = this.route.queryParams.subscribe(this.syncWithNewUrlParams);
   }
 
   ngOnDestroy() {
     this.routeSub.unsubscribe();
   }
 
-  private syncWithUrlParams = (params: Params): void => {
+  private syncWithNewUrlParams = (params: Params): void => {
     const q = params['q'];
-    this.queryParam = q;
+    const dt = params['dt'];
+    this.value = q;
+    this.queryParams = { q: q, dt: dt ? Number(dt) : undefined };
 
-    if (q !== undefined && q !== this.value) {
-      this.value = q;
-      this.submit();
-    }
-  };
-
-  private syncUrlWithValue = () => {
-    if (this.queryParam !== this.value) {
-      this.router.navigate([], { queryParams: { q: this.value } });
-    }
+    this.submit();
   };
 
   submit(): void {
-    this.onSubmit.emit(this.value);
+    this.onSubmit.emit({ city: this.value, dt: this.queryParams['dt'] });
+  }
 
-    this.syncUrlWithValue();
+  userSubmit(): void {
+    this.router.navigate([], { queryParams: { q: this.value } });
   }
 }

@@ -4,6 +4,7 @@ import {
   addDoc,
   collection,
   collectionData,
+  orderBy,
   query,
   where,
 } from '@angular/fire/firestore/lite';
@@ -33,27 +34,40 @@ export class WeatherService {
     this.coll = collection(firestore, 'forecasts');
   }
 
-  getForecastHistory() {
-    return collectionData(this.coll);
+  getForecastHistory(): Observable<ISavedForecast[]> {
+    const ordered = query<ISavedForecast>(
+      this.coll,
+      orderBy('timestamp', 'desc')
+    );
+    return collectionData(ordered);
   }
 
-  getWeather(city: string): Observable<IForecastResponseData> {
+  getWeather(city: string, dt?: number): Observable<IForecastResponseData> {
     const lowerCaseCity = city.toLowerCase();
 
-    return this.getSavedForecast(lowerCaseCity).pipe(
+    return this.getSavedForecast(lowerCaseCity, dt).pipe(
       this.maybeGetNewForecastAndSave(lowerCaseCity)
     );
   }
 
   private getSavedForecast = (
-    city: string
+    city: string,
+    dt?: number
   ): Observable<IForecastResponseData> => {
+    // Ensure that `dt` is actually a Number and not a String, otherwise
+    // Firebase query will not work properly.
+    const dtNumber: number | undefined = dt && Number(dt);
     // Forecast `dt` value is expressed in seconds.
-    const dt = Date.now() / 1000;
+    const currentDt = Date.now() / 1000;
+
+    const whereExactDt = where('forecastStartDt', '==', dtNumber);
+    const whereRecentDt = where('forecastStartDt', '>', currentDt);
+    const isExactDt = !!dtNumber;
+
     const q = query(
       this.coll,
       where('city', '==', city),
-      where('forecastStartDt', '>', dt)
+      isExactDt ? whereExactDt : whereRecentDt
     );
 
     return collectionData<ISavedForecast>(q).pipe(

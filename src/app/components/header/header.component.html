@@ -1,0 +1,8 @@
+<mat-toolbar>
+  <h1>arbnco forecast</h1>
+  <nav ngClass="nav">
+    <a mat-button routerLink="/" routerLinkActive="active-link"
+      [routerLinkActiveOptions]="{ paths: 'exact', queryParams: 'ignored',  fragment:'ignored',  matrixParams: 'ignored' }">Forecast</a>
+    <a mat-button routerLink="/history" routerLinkActive="active-link">Forecasts History</a>
+  </nav>
+</mat-toolbar>

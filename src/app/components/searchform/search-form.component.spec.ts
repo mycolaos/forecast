@@ -7,20 +7,22 @@ import { SearchFormComponent } from './search-form.component';
 const INITIAL_QUERY = 'Kyiv';
 
 describe('SearchFormComponent', () => {
-  const qparams$ = new BehaviorSubject({ q: INITIAL_QUERY });
-
-  const activatedRouteSpy = jasmine.createSpyObj(
-    'ActivatedRoute',
-    {},
-    { queryParams: qparams$ }
-  );
-
-  const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
+  let qparams$: BehaviorSubject<{ q: string }>;
+  let activatedRouteSpy: any;
+  let routerSpy: any;
 
   let component: SearchFormComponent;
   let fixture: ComponentFixture<SearchFormComponent>;
 
   beforeEach(async () => {
+    qparams$ = new BehaviorSubject({ q: INITIAL_QUERY });
+    activatedRouteSpy = jasmine.createSpyObj(
+      'ActivatedRoute',
+      {},
+      { queryParams: qparams$ }
+    );
+    routerSpy = jasmine.createSpyObj('Router', ['navigate']);
+
     await TestBed.configureTestingModule({
       declarations: [SearchFormComponent],
       providers: [
@@ -48,12 +50,12 @@ describe('SearchFormComponent', () => {
 
   it('should emit when url query changes', () => {
     const newCity = 'London';
-    const subscription = component.onSubmit.subscribe((city: string) => {
+    const subscription = component.onSubmit.subscribe(({ city }) => {
       subscription.unsubscribe();
 
       expect(city).toEqual(newCity);
     });
-    activatedRouteSpy.queryParams.next({ q: newCity });
+    activatedRouteSpy.queryParams.next({ q: newCity, dt: undefined });
   });
 
   it('should not emit twice when new value is submitted', () => {
@@ -62,17 +64,20 @@ describe('SearchFormComponent', () => {
 
     // Simulate value to url sync.
     component.value = newCity;
-    component.submit();
-    activatedRouteSpy.queryParams.next({ q: newCity });
+    component.userSubmit();
+    activatedRouteSpy.queryParams.next({ q: newCity, dt: undefined });
 
-    expect(component.onSubmit.emit).toHaveBeenCalledOnceWith(newCity);
+    expect(component.onSubmit.emit).toHaveBeenCalledOnceWith({
+      city: newCity,
+      dt: undefined,
+    });
   });
 
   it('should sync url when new value is submitted', () => {
     const newCity = 'Rome';
 
     component.value = newCity;
-    component.submit();
+    component.userSubmit();
     expect(routerSpy.navigate).toHaveBeenCalledOnceWith([], {
       queryParams: { q: newCity },
     });

@@ -1,7 +1,7 @@
-<div [ngClass]="'wrapper'">
+<div ngClass="wrapper">
   <app-search-form (onSubmit)="handleSearch($event)"></app-search-form>
-  <span *ngIf="serviceError" [ngClass]="'serviceError'">An error occured, please contact the administration.</span>
-  <span *ngIf="cityNotFound" [ngClass]="'cityNotFound'">City not found "{{ cityNotFound }}"</span>
+  <span *ngIf="serviceError" ngClass="serviceError">An error occured, please contact the administration.</span>
+  <span *ngIf="cityNotFound" ngClass="cityNotFound">City not found "{{ cityNotFound }}"</span>
   <h2 ngClass="header">{{city}}</h2>
   <app-forecast-chart [series]='[temperature]' chartTitle="Temperature"></app-forecast-chart>
   <app-forecast-chart [series]='[humidity]' chartTitle="Humidity"></app-forecast-chart>

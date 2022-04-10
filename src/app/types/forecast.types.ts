@@ -1,3 +1,5 @@
+import { Timestamp } from 'firebase/firestore/lite';
+
 /**
  * * Those are only partial types for the OpenWeatherMap forecast data, we
  * * didn't find its types packages, if you find such packages, please
@@ -17,8 +19,13 @@ export interface IForecastResponseData {
 }
 
 export interface ISavedForecast {
-  timestamp: Date;
+  timestamp: Timestamp;
   city: string;
   forecastRaw: IForecastResponseData;
   forecastStartDt: number;
+}
+
+export interface SearchParams {
+  city: string;
+  dt?: number;
 }

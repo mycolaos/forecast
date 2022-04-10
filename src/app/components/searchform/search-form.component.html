@@ -1,7 +1,7 @@
-<form [ngClass]="'form'" (ngSubmit)="submit()">
+<form ngClass="form" (ngSubmit)="userSubmit()">
   <mat-form-field appearance="fill">
     <mat-label>City</mat-label>
-    <input matInput [ngClass]="'searchInput'" type="search" name="search" placeholder="Meteo for city..."
+    <input matInput ngClass="searchInput" type="search" name="search" placeholder="Meteo for city..."
       [(ngModel)]="value">
     <button matSuffix mat-icon-button color="primary" type="submit" title="Search" [disabled]="!value">
       <mat-icon>search</mat-icon>

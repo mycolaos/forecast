@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { IForecast, IForecastResponseData } from 'src/app/types/forecast.types';
+import {
+  IForecast,
+  IForecastResponseData,
+  SearchParams,
+} from 'src/app/types/forecast.types';
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { SeriesLineOptions } from 'highcharts';
@@ -53,12 +57,17 @@ export class ForecastComponent implements OnInit {
     this.humidity = { ...this.humidity, data: tempHumidity };
   };
 
-  handleSearch(city: string): void {
+  handleSearch({ city, dt }: SearchParams): void {
+    if (!city) {
+      this.reset();
+      return;
+    }
+
     this.serviceError = false;
     this.cityNotFound = '';
     this.city = city;
 
-    this.weatherService.getWeather(city).subscribe({
+    this.weatherService.getWeather(city, dt).subscribe({
       next: (data) => this.createSeries(data),
       error: (err: HttpErrorResponse) => {
         if (err.status === 404) {
@@ -69,4 +78,12 @@ export class ForecastComponent implements OnInit {
       },
     });
   }
+
+  reset = () => {
+    this.temperature = { ...this.temperature, data: [] };
+    this.humidity = { ...this.humidity, data: [] };
+    this.serviceError = false;
+    this.cityNotFound = '';
+    this.city = '';
+  };
 }
